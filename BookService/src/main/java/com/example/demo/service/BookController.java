@@ -1,47 +1,35 @@
-package com.sam.demo.service;
+package com.example.BookService.service;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import static com.example.BookService.util.SleepUtility.sleep;
 
+import com.example.BookService.manager.BookManager;
+import com.example.BookService.model.Book;
+import com.example.BookService.util.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.common.base.Stopwatch;
-import com.sam.demo.manager.BookManager;
-import com.sam.demo.model.Book;
-import static com.sam.demo.util.SleepUtility.sleep;
+import java.util.List;
 
-@RefreshScope
 @RestController
 public class BookController {
-	
-	@Autowired
-	BookManager bookManager;
 
-	@Value("${app-creator}")
-	String app_creator;
-	
-	@RequestMapping(value="/{author}/books", method=RequestMethod.GET)
-	public List<Book> getBookByAuthor(@PathVariable(value="author") String author)
-	{
-		Stopwatch timer = Stopwatch.createStarted();
-		List<Book> books = bookManager.getByAuthor(author);
-		bookManager.printMe(author, books);
-		System.out.println("Method took: " + timer.stop());
-		return books;
-	}
-	
-	@RequestMapping(value="/info", method=RequestMethod.GET)
-	public String getInfo()
-	{
-		//sleep();
-		return "App By : " + app_creator;
-	}
-	
-	
+    @Autowired
+    BookManager bookManager;
+
+    //@Autowired
+    //Logger logger;
+
+    @RequestMapping(value="/{author}/books", method= RequestMethod.GET)
+    public List<Book> getBookByAuthor(@PathVariable(value="author") String author)
+    {
+        List<Book> books = bookManager.getByAuthor(author);
+        //logger.logBooks(books);
+        return books;
+    }
+
+
 }
